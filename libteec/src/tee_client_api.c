@@ -34,7 +34,6 @@
 #include <zephyr/device.h>
 #include <zephyr/drivers/tee.h>
 #include <zephyr/kernel.h>
-#include <zephyr/xen/generic.h>
 #include <zephyr/logging/log.h>
 #include <tee_client_api_extensions.h>
 #include <tee_client_api.h>
@@ -46,6 +45,8 @@ LOG_MODULE_REGISTER(tee_client_api);
 #endif
 
 #include <tee.h>
+
+#define TEE_CLIENT_PAGE_SIZE 4096
 
 #define DT_COMPATIBLE linaro_optee_tz
 
@@ -77,7 +78,7 @@ static void teec_mutex_unlock(struct k_mutex  *mu)
 
 static void *teec_paged_aligned_alloc(size_t sz)
 {
-	return k_aligned_alloc(XEN_PAGE_SIZE, sz);
+	return k_aligned_alloc(TEE_CLIENT_PAGE_SIZE, sz);
 }
 
 static int teec_open_dev(struct device const **dev, const char *capabilities,
